@@ -2,7 +2,7 @@
 import express from "express";
 
 // Requiring all the important modules
-// import isLoggedIn from "../Middlewares/isLoggedInMiddleware.js";
+import loggedIn from "../Middlewares/loggedInMiddleware.js";
 import {
   register,
   login,
@@ -27,7 +27,7 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
 // Route for GET request on "/logout" link
-router.post("/logout", logout);
+router.post("/logout", loggedIn, logout);
 
 // Exporting the router
 export default router;

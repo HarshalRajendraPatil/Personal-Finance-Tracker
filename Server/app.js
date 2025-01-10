@@ -7,6 +7,7 @@ import { config } from "dotenv";
 
 import errorHandlerMiddleware from "./Middlewares/errorHandlerMiddleware.js";
 import authenticationRoutes from "./Routes/authenticationRoute.js";
+import transactionRoutes from "./Routes/transactionRoute.js";
 
 const app = express();
 config({ path: "./Config/.env" });
@@ -24,6 +25,7 @@ app.use(morgan("dev"));
 app.use(fileUpload({ useTempFiles: true, tempFileDir: "/tmp/" }));
 
 app.use("/api/authentication", authenticationRoutes);
+app.use("/api/transaction", transactionRoutes);
 
 app.use(errorHandlerMiddleware);
 
