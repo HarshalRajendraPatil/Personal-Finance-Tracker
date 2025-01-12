@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
     totalIncome: { type: Number, default: 0 },
     totalExpense: { type: Number, default: 0 },
     currency: { type: String, default: "USD" },
-    createdAt: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: Date.now() },
   },
   { timestamps: true }
 );

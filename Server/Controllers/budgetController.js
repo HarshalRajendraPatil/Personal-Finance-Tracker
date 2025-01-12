@@ -4,13 +4,14 @@ import CustomError from "../Utils/customError.js";
 
 // POST /api/budgets - Create a new budget
 const createBudget = catchAsync(async (req, res, next) => {
-  const { category, budgetLimit, period, startDate, endDate } = req.body;
+  const { category, name, budgetLimit, period, startDate, endDate } = req.body;
   const userId = req.user._id; // Assuming userId is added by the auth middleware
 
-  if (!category || !budgetLimit || !endDate) {
+  if (!category || !budgetLimit || !endDate || !name) {
     return next(new CustomError("Please provide all the details.", 400));
   }
   const budget = await Budget.create({
+    name,
     userId,
     category,
     budgetLimit,
@@ -29,11 +30,24 @@ const createBudget = catchAsync(async (req, res, next) => {
 const getBudgets = catchAsync(async (req, res) => {
   const userId = req.user._id;
 
-  const budgets = await Budget.find({ userId });
+  // Extract query parameters for pagination
+  const page = parseInt(req.query.page, 10) || 1; // Default to page 1
+  const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 results per page
+  const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+  // Retrieve budgets with pagination
+  const budgets = await Budget.find({ userId }).skip(skip).limit(limit);
+
+  // Count the total number of budgets for the user
+  const totalBudgets = await Budget.countDocuments({ userId });
 
   res.status(200).json({
     status: "success",
     data: budgets,
+    totalBudgets,
+    currentPage: page,
+    totalPages: Math.ceil(totalBudgets / limit),
+    limit,
   });
 });
 

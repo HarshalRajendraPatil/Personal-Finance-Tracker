@@ -25,6 +25,7 @@ app.use(
     methods: ["PUT", "POST", "GET", "DELETE"],
   })
 );
+// app.use(cors());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(fileUpload({ useTempFiles: true, tempFileDir: "/tmp/" }));

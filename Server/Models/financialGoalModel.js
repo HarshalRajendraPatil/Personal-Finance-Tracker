@@ -8,8 +8,8 @@ const financialGoalSchema = new mongoose.Schema({
   percentageComplete: { type: Number, default: 0 },
   deadline: { type: Date, required: true },
   category: { type: String }, // Optional link to a category
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now() },
+  updatedAt: { type: Date, default: Date.now() },
 });
 
 const financialGoal = mongoose.model("FinancialGoal", financialGoalSchema);

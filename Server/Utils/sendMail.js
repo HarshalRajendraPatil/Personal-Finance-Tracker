@@ -22,7 +22,7 @@ const sendMail = catchAsync(async function (email, next, msg, subject) {
       address: process.env.EMAIL,
     },
     to: email,
-    subject: subject,
+    subject,
     html: msg,
   };
 

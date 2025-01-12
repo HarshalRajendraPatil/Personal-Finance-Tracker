@@ -81,9 +81,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
     expires: Date.now() + 15 * 60 * 1000,
   });
 
-  const resetUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/api/authentication/reset-password/${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
   const message = `<p>You requested a password reset. Click <a href="${resetUrl}">here</a> to reset your password. This link is valid for 15 minutes.</p>`;
   const subject = "Password Reset Request";
 
@@ -125,14 +123,16 @@ const resetPassword = catchAsync(async (req, res, next) => {
   // Remove token from memory
   resetTokens.delete(hashedToken);
 
-  res.status(200).json({ message: "Password has been reset successfully." });
+  res
+    .status(200)
+    .json({ status: "success", data: "Password has been reset successfully." });
 });
 
 // Exporting the function for getting the reset password page
 const logout = (req, res, next) => {
   res
     .cookie("jwt", "", { maxAge: 0, secure: true, sameSite: "None" })
-    .json({ status: "success", message: "User logged out" });
+    .json({ status: "success", data: "User logged out" });
 };
 
 export { register, login, forgotPassword, resetPassword, logout };

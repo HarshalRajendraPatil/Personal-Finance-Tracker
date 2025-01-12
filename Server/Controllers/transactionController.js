@@ -112,7 +112,7 @@ const getTransactions = catchAsync(async (req, res) => {
 
   res.status(200).json({
     status: "success",
-    transactions,
+    data: transactions,
     totalTransactions,
     totalPages: Math.ceil(totalTransactions / limit),
     currentPage: Number(page),

@@ -12,10 +12,10 @@ const recurringTransactionSchema = new mongoose.Schema({
     required: true,
   },
   customFrequencyDays: { type: Number }, // Only for custom frequencies
-  startDate: { type: Date, required: true, default: Date.now },
+  startDate: { type: Date, required: true, default: Date.now() },
   endDate: { type: Date },
   isPaused: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now() },
 });
 
 const RecurringTransaction = mongoose.model(

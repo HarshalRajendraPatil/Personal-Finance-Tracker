@@ -57,18 +57,16 @@ const getCategoryBreakdown = catchAsync(async (req, res) => {
 
 const getTrends = catchAsync(async (req, res) => {
   const userId = req.user._id;
-  const { startDate, endDate } = req.query;
 
   const trends = await Transaction.aggregate([
     {
       $match: {
         userId,
-        date: { $gte: new Date(startDate), $lte: new Date(endDate) },
       },
     },
     {
       $group: {
-        _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+        _id: "$date",
         totalIncome: {
           $sum: { $cond: [{ $eq: ["$type", "income"] }, "$amount", 0] },
         },
@@ -88,10 +86,10 @@ const getTrends = catchAsync(async (req, res) => {
 
 const getTopTransactions = catchAsync(async (req, res) => {
   const userId = req.user._id;
-  const { type, limit = 5 } = req.query;
+  const { limit = 5 } = req.query;
 
-  const transactions = await Transaction.find({ userId, type })
-    .sort({ amount: -1 })
+  const transactions = await Transaction.find({ userId })
+    .sort({ date: -1 })
     .limit(Number(limit));
 
   res.status(200).json({
