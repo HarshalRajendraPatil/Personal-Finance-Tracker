@@ -13,6 +13,7 @@ import analyticsRoute from "./Routes/analyticsRoute.js";
 import financialGoalRoute from "./Routes/financialGoalRoute.js";
 import notificationRoute from "./Routes/notificationRoute.js";
 import recurringTransactionRoute from "./Routes/recurringTransactionRoute.js";
+import userRoute from "./Routes/userRoute.js";
 
 const app = express();
 config({ path: "./Config/.env" });
@@ -28,7 +29,6 @@ app.use(
 // app.use(cors());
 app.use(cookieParser());
 app.use(morgan("dev"));
-app.use(fileUpload({ useTempFiles: true, tempFileDir: "/tmp/" }));
 
 app.use("/api/authentication", authenticationRoutes);
 app.use("/api/transaction", transactionRoutes);
@@ -37,6 +37,7 @@ app.use("/api/analytics", analyticsRoute);
 app.use("/api/goals", financialGoalRoute);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/recurring-transactions", recurringTransactionRoute);
+app.use("/api/user", userRoute);
 
 app.use(errorHandlerMiddleware);
 

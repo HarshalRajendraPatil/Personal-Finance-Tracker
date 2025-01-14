@@ -3,6 +3,7 @@ import { Pie, Bar } from "react-chartjs-2";
 import axiosInstance from "../config/axiosConfig";
 
 const BudgetPage = () => {
+  const [loading, setLoading] = useState(false);
   const [budgets, setBudgets] = useState([]);
   const [filteredBudgets, setFilteredBudgets] = useState([]);
   const [selectedBudget, setSelectedBudget] = useState(null);
@@ -21,6 +22,7 @@ const BudgetPage = () => {
   useEffect(() => {
     // Fetch budgets from API
     const fetchBudgets = async () => {
+      setLoading(true);
       try {
         const response = await axiosInstance.get("/budgets");
         setBudgets(response.data.data);
@@ -28,6 +30,8 @@ const BudgetPage = () => {
         console.log(response.data.data);
       } catch (error) {
         console.error("Error fetching budgets:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -55,6 +59,7 @@ const BudgetPage = () => {
 
   const handleAddEditSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (selectedBudget) {
         // Edit budget
@@ -79,17 +84,22 @@ const BudgetPage = () => {
       setFilteredBudgets(response.data.data);
     } catch (error) {
       console.error("Error saving budget:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this budget?")) {
+      setLoading(true);
       try {
         await axiosInstance.delete(`/budgets/${id}`);
         setBudgets((prev) => prev.filter((budget) => budget.id !== id));
         setFilteredBudgets((prev) => prev.filter((budget) => budget.id !== id));
       } catch (error) {
         console.error("Error deleting budget:", error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -161,14 +171,12 @@ const BudgetPage = () => {
         </div>
       </div>
 
-      <div className="flex justify-between items-center mb-4">
-        <button
-          onClick={() => setShowAddEditModal(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Add New Budget
-        </button>
-      </div>
+      <button
+        onClick={() => setShowAddEditModal(true)}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Add New Budget
+      </button>
 
       <div className="p-0 bg-gray-100  overflow-x-scroll">
         <select
@@ -346,6 +354,7 @@ const BudgetPage = () => {
                   Cancel
                 </button>
                 <button
+                  disabled={loading}
                   type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded"
                 >

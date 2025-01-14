@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axiosInstance from "../config/axiosConfig";
 import {
   Chart as ChartJS,
@@ -163,15 +164,24 @@ const DashboardPage = () => {
 
       {/* Quick Actions */}
       <section className="mb-6 flex gap-4">
-        <button className="flex items-center gap-2 bg-purple-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-purple-700">
+        <Link
+          to={"/transactions"}
+          className="flex items-center gap-2 bg-purple-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-purple-700"
+        >
           <FaPlus /> Add Transaction
-        </button>
-        <button className="flex items-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700">
+        </Link>
+        <Link
+          to={"/budgets"}
+          className="flex items-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700"
+        >
           <FaWallet /> Set Budget
-        </button>
-        <button className="flex items-center gap-2 bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700">
+        </Link>
+        <Link
+          to={"/goals"}
+          className="flex items-center gap-2 bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700"
+        >
           <FaBullseye /> Create Goal
-        </button>
+        </Link>
       </section>
 
       {/* Graphs and Insights */}

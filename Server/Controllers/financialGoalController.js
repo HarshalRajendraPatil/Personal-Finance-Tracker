@@ -41,11 +41,44 @@ const createGoal = catchAsync(async (req, res, next) => {
 const getGoals = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
 
-  const goals = await FinancialGoal.find({ userId }).sort({ createdAt: -1 });
+  // Extract pagination parameters from the query
+  const page = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
+  const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 results per page
+  const skip = (page - 1) * limit;
+
+  // Extract search parameters from the query
+  const { name, status } = req.query;
+
+  // Build the query object dynamically
+  const query = { userId };
+
+  // Add search condition for name
+  if (name) {
+    query.name = { $regex: name, $options: "i" }; // Case-insensitive partial match
+  }
+
+  // Add status condition if provided
+  if (status) {
+    query.status = status; // Match exact status
+  }
+
+  // Query the database with filtering, pagination, and sorting
+  const goals = await FinancialGoal.find(query)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  // Count total documents for pagination metadata
+  const totalGoals = await FinancialGoal.countDocuments(query);
+  const totalPages = Math.ceil(totalGoals / limit);
 
   res.status(200).json({
     status: "success",
     data: goals,
+    totalGoals,
+    currentPage: page,
+    totalPages,
+    limit,
   });
 });
 
@@ -70,13 +103,18 @@ const updateGoal = catchAsync(async (req, res, next) => {
 
   delete updates.currentAmount;
 
-  const updatedGoal = await FinancialGoal.findOneAndUpdate(
+  let updatedGoal = await FinancialGoal.findOneAndUpdate(
     { _id: id, userId: req.user._id },
     updates,
     { new: true, runValidators: true }
   );
 
+  if (updatedGoal.targetAmount > updatedGoal.currentAmount) {
+    updatedGoal.status = "active";
+  }
+
   if (!updatedGoal) return next(new CustomError("Goal not found", 404));
+  updatedGoal = await updatedGoal.save();
 
   res.status(200).json({
     status: "success",
@@ -101,7 +139,8 @@ const deleteGoal = catchAsync(async (req, res, next) => {
 // Add a contribution toward a goal
 const contributeToGoal = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  const { amount } = req.body; // Contribution amount
+  let { amount } = req.body; // Contribution amount
+  amount = Number(amount);
 
   if (!amount || amount <= 0) {
     return next(new CustomError("Invalid contribution amount", 400));
@@ -120,6 +159,11 @@ const contributeToGoal = catchAsync(async (req, res, next) => {
   const percentageComplete =
     (goal.currentAmount / goal.targetAmount) * 100 || 0;
 
+  if (percentageComplete < 100) {
+    goal.status = "active";
+  } else {
+    goal.status = "completed";
+  }
   goal.percentageComplete = percentageComplete.toFixed(2);
 
   goal.updatedAt = Date.now();

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,29 +18,29 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 text-gray-700 font-medium">
           <li>
-            <a href="/dashboard" className="hover:text-purple-700">
+            <Link to="/" className="hover:text-purple-700">
               Dashboard
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/transactions" className="hover:text-purple-700">
+            <Link to="/transactions" className="hover:text-purple-700">
               Transactions
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/budgets" className="hover:text-purple-700">
+            <Link to="/budgets" className="hover:text-purple-700">
               Budgets
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/goals" className="hover:text-purple-700">
+            <Link to="/goals" className="hover:text-purple-700">
               Goals
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/profile" className="hover:text-purple-700">
+            <Link to="/profile" className="hover:text-purple-700">
               Profile
-            </a>
+            </Link>
           </li>
         </ul>
 
