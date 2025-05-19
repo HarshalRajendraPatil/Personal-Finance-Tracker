@@ -20,6 +20,9 @@ const createBudget = catchAsync(async (req, res, next) => {
     endDate,
   });
 
+  req.user.totalBudgets += 1;
+  await req.user.save();
+
   res.status(201).json({
     status: "success",
     data: budget,
@@ -89,6 +92,9 @@ const deleteBudget = catchAsync(async (req, res) => {
   const budget = await Budget.findOneAndDelete({ _id: id, userId });
 
   if (!budget) return next(new CustomError("Budget not found", 400));
+
+  req.user.totalBudgets -= 1;
+  await req.user.save();
 
   res.status(204).json({
     status: "success",

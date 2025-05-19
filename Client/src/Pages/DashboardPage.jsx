@@ -185,17 +185,7 @@ const DashboardPage = () => {
       </section>
 
       {/* Graphs and Insights */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Category-Wise Spending */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Category-Wise Spending
-          </h2>
-          <div className="w-full max-w-sm mx-auto">
-            <Pie data={data} options={options} />
-          </div>
-        </div>
-
+      <section className="grid grid-cols-1 gap-6">
         {/* Spending Trends */}
         <div className="bg-white p-4 rounded-lg shadow-md">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
@@ -218,6 +208,16 @@ const DashboardPage = () => {
               ],
             }}
           />
+        </div>
+
+        {/* Category-Wise Spending */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            Category-Wise Spending
+          </h2>
+          <div className="w-full max-w-sm mx-auto">
+            <Pie data={data} options={options} />
+          </div>
         </div>
       </section>
     </div>

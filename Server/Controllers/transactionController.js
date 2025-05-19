@@ -24,6 +24,10 @@ const addTransaction = catchAsync(async (req, res, next) => {
   });
 
   const savedTransaction = await newTransaction.save();
+
+  req.user.totalTransactions += 1;
+  await req.user.save();
+
   res.status(201).json({ status: "success", data: savedTransaction });
 });
 
@@ -128,6 +132,9 @@ const deleteTransaction = catchAsync(async (req, res, next) => {
   if (!deletedTransaction) {
     return next(new CustomError("Transaction not found", 404));
   }
+
+  req.user.totalTransactions -= 1;
+  await req.user.save();
 
   res
     .status(200)

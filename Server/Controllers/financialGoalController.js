@@ -31,6 +31,9 @@ const createGoal = catchAsync(async (req, res, next) => {
     category,
   });
 
+  req.user.totalGoals += 1;
+  await req.user.save();
+
   res.status(201).json({
     status: "success",
     data: newGoal,
@@ -132,6 +135,9 @@ const deleteGoal = catchAsync(async (req, res, next) => {
   });
 
   if (!deletedGoal) return next(new CustomError("Goal not found", 404));
+
+  req.user.totalGoals -= 1;
+  await req.user.save();
 
   res.status(204).json({ status: "success", data: null });
 });

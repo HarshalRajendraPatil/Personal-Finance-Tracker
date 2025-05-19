@@ -3,9 +3,7 @@ import React, { useState } from "react";
 const ProfileEditModal = ({ user, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
     name: user.name,
-    email: user.email,
-    password: "",
-    currency: user.currency,
+    // currency: user.currency,
   });
 
   const handleChange = (e) => {
@@ -25,63 +23,61 @@ const ProfileEditModal = ({ user, onClose, onUpdate }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h3 className="text-lg font-bold mb-4">Edit Profile</h3>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg mx-4">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">Edit Profile</h3>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name Input */}
           <div>
-            <label className="block text-sm font-medium">Name</label>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Name
+            </label>
             <input
               type="text"
+              id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your name"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium">Email</label>
+
+          {/* Currency Input */}
+          {/* <div>
+            <label
+              htmlFor="currency"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Preferred Currency
+            </label>
             <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="input input-bordered w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="input input-bordered w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Currency</label>
-            <select
+              type="text"
+              id="currency"
               name="currency"
               value={formData.currency}
               onChange={handleChange}
-              className="select select-bordered w-full"
-            >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="INR">INR</option>
-              {/* Add more currencies as needed */}
-            </select>
-          </div>
-          <div className="flex justify-end space-x-2">
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your preferred currency"
+            />
+          </div> */}
+
+          {/* Action Buttons */}
+          <div className="flex justify-end space-x-4">
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-secondary"
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
             >
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
               Save Changes
             </button>
           </div>

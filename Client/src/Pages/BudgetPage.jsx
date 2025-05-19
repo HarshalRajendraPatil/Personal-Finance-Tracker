@@ -94,8 +94,10 @@ const BudgetPage = () => {
       setLoading(true);
       try {
         await axiosInstance.delete(`/budgets/${id}`);
-        setBudgets((prev) => prev.filter((budget) => budget.id !== id));
-        setFilteredBudgets((prev) => prev.filter((budget) => budget.id !== id));
+        setBudgets((prev) => prev.filter((budget) => budget._id !== id));
+        setFilteredBudgets((prev) =>
+          prev.filter((budget) => budget._id !== id)
+        );
       } catch (error) {
         console.error("Error deleting budget:", error);
       } finally {
@@ -134,6 +136,8 @@ const BudgetPage = () => {
       ],
     };
   }, [budgets]);
+
+  console.log(pieChartData);
 
   const barChartData = useMemo(() => {
     return {
@@ -242,7 +246,7 @@ const BudgetPage = () => {
 
         <div className="flex justify-between items-center mt-4">
           <p>
-            Page {currentPage} of {totalPages}
+            Page {currentPage} of {totalPages || 1}
           </p>
           <div className="flex space-x-2">
             {Array.from({ length: totalPages }, (_, index) => index + 1).map(
@@ -306,18 +310,23 @@ const BudgetPage = () => {
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label className="block mb-1">Allocated Amount</label>
-                <input
-                  type="number"
-                  value={formData.currentSpent}
-                  onChange={(e) =>
-                    setFormData({ ...formData, currentSpent: +e.target.value })
-                  }
-                  className="w-full p-2 border border-gray-300 rounded"
-                  required
-                />
-              </div>
+              {selectedBudget && (
+                <div className="mb-4">
+                  <label className="block mb-1">Amount Spent</label>
+                  <input
+                    type="number"
+                    value={formData.currentSpent}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        currentSpent: +e.target.value,
+                      })
+                    }
+                    className="w-full p-2 border border-gray-300 rounded"
+                    required
+                  />
+                </div>
+              )}
               <div className="mb-4">
                 <label className="block mb-1">Start Date</label>
                 <input
@@ -354,11 +363,10 @@ const BudgetPage = () => {
                   Cancel
                 </button>
                 <button
-                  disabled={loading}
                   type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded"
                 >
-                  Save
+                  {selectedBudget ? "Save Changes" : "Add Budget"}
                 </button>
               </div>
             </form>
@@ -366,16 +374,20 @@ const BudgetPage = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-        <div className="bg-white p-4 rounded shadow">
-          <h3 className="text-lg font-bold mb-2">Budget Allocation</h3>
-          <div className="w-full max-w-sm mx-auto">
-            <Pie data={pieChartData} />
-          </div>
-        </div>
+      <div className="grid grid-cols-1 gap-6 mt-8">
         <div className="bg-white p-4 rounded shadow">
           <h3 className="text-lg font-bold mb-2">Spending Trends</h3>
           <Bar data={barChartData} />
+        </div>
+        <div className="bg-white p-4 rounded shadow">
+          <h3 className="text-lg font-bold mb-2">Budget Allocation</h3>
+          <div className="w-full max-w-sm mx-auto">
+            {pieChartData.labels.length == 0 ? (
+              <h1 className="text-center">No data to show</h1>
+            ) : (
+              <Pie data={pieChartData} />
+            )}
+          </div>
         </div>
       </div>
     </div>
